@@ -1,0 +1,78 @@
+<%- include('partials/header'); -%>
+
+<form>
+    <h2>Login page</h2>
+
+    <label for="username">UserName</label>
+    <input type="text" name="username" required/>
+    <div class="usernameError"></div>
+
+    <label for="password">Password</label>
+    <input type="password" name="password" requiere/>
+    <div class="passwordError"></div>
+
+    <button>Login</button>
+</form>
+
+<script>
+    //form Elements
+    const formElement = document.querySelector('form') 
+    
+    //Error Elements 
+    const usernameErrorElement = document.querySelector('.usernameError')   //.className   id-> #elementID
+    const passwordErrorElement = document.querySelector('.passwordError')
+
+
+    formElement.addEventListener('submit',async (event)=>{ //監聽submit 事件
+    
+    event.preventDefault(event) //subit Defaut event -> refresh page(沒寫會出事) 
+
+    // Reset Error Message !! //不然Error message 會在上面
+    usernameErrorElement.textContent= ""
+    passwordErrorElement.textContent= ""
+
+    //Get the vale from form 
+
+    const username = formElement.username.value
+    const password = formElement.password.value
+
+    //console.log(username,password)
+
+    try{
+        const response = await fetch('/login ',{
+            method:'post',
+            body:JSON.stringify({username:username,password:password}), //JSON.stringify() static method converts a JavaScript value to a JSON string
+            headers:{'Content-Type':'application/json'}
+            }
+        )
+
+        //Parse the reponse(from Server) json data
+        const data = await response.json()
+       
+
+        // Show Error messages on sign page 
+        //console.log(data.errors)
+        //console.log(data.errors.password)
+        
+        if (data.errors){ 
+            usernameErrorElement.textContent = data.errors.username
+            passwordErrorElement.textContent = data.errors.password
+        }
+        
+        //console.log(data)
+
+        console.log(data.userId)
+        if (data.userId){
+            location.assign('/adminpanel')//Navitage to URL
+        }
+        
+
+    }catch(error){
+        console.log(error)
+    }
+
+    })
+</script>
+
+
+<%- include('partials/footer'); -%>

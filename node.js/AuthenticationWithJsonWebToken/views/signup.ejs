@@ -1,0 +1,70 @@
+<%- include('partials/header'); -%>
+
+<form>
+    <h2>Sign up page</h2>
+
+    <label for="username">UserName</label>
+    <input type="text" name="username" required/>
+    <div class="usernameError"></div>
+
+    <label for="password">Password</label>
+    <input type="password" name="password" requiere/>
+    <div class="passwordError"></div>
+
+    <button>Sign up</button>
+</form>
+
+<script>
+    const formElement = document.querySelector('form') 
+
+    //Error Elements 
+    const usernameErrorElement = document.querySelector('.usernameError')   //.className   id-> #elementID
+    const passwordErrorElement = document.querySelector('.passwordError')
+
+    formElement.addEventListener('submit',async (event)=>{ //監聽submit 事件
+        
+        event.preventDefault(event) //subit Defaut event -> refresh page(沒寫會出事) 
+
+        // Reset Error Message !! //不然Error message 會在上面
+        usernameErrorElement.textContent= ""
+        passwordErrorElement.textContent= ""
+
+        //Get the vale from form 
+
+        const username = formElement.username.value
+        const password = formElement.password.value
+
+        //console.log(username,password)
+
+        try{
+            const response = await fetch('/signup',{
+                method:'post',
+                body:JSON.stringify({username:username,password:password}), //JSON.stringify() static method converts a JavaScript value to a JSON string
+                headers:{'Content-Type':'application/json'}
+                }
+            )
+
+            //Parse the reponse(from Server) json data
+            const data = await response.json()
+            //console.log(data)
+
+            // Show Error messages on sign page 
+            if (data.errorsMessages){ 
+                usernameErrorElement.textContent = data.errorsMessages.username
+                passwordErrorElement.textContent = data.errorsMessages.password
+            }
+            
+            //console.log(data)
+            if (data.userID){
+                location.assign('/')//Navitage to URL
+            }
+            
+
+        }catch(error){
+            console.log(error)
+        }
+
+    })
+</script>
+
+<%- include('partials/footer'); -%>
