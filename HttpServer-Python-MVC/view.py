@@ -9,10 +9,12 @@ class View:
         with open(templatePath, 'r') as template:
 
             templateContent = template.read() # (Strings) 
-
+            print("html:", templateContent)
             if data :
                 renderContent = templateContent.format(**data) # Template {name} -> name
             else :
                 renderContent = templateContent
+
+            
 
         return renderContent

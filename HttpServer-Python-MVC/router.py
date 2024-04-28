@@ -3,9 +3,6 @@
 import os
 from view import View
 
-
-
-
 class Router():
 
     def __init__(self):
@@ -26,6 +23,9 @@ class Router():
         if reqPath == "/":
             templatePath = os.path.join(self.currentDirPath,"views","index.html")
             return View.render(templatePath,self.data)
+        elif reqPath == "/test":
+            templatePath = os.path.join(self.currentDirPath,"views","test.html")
+            return View.render(templatePath)
         else:
             return self.notFound()
 

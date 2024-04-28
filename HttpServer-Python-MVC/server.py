@@ -1,6 +1,6 @@
 import socket 
 from router import Router
-
+import time 
 class Banner:
 
     HEADER = '\033[5m'
@@ -59,6 +59,8 @@ def server():
 def requestHandler(clientSocket):
     
     router = Router()
+    
+    
 
     #Receive Data from Client 
     clientTcpPayload = clientSocket.recv(1024).decode()
@@ -75,18 +77,18 @@ def requestHandler(clientSocket):
 
     #Routing & Return HTML (Body)  
     httpPayload = router.route(clientRequestPath)
-    payloadLength = len(httpPayload)
+    print("HTTP Payload", httpPayload)
+    # payloadLength = len(httpPayload.encode())
 
     # Construct Response Header
     httpHeader = (
     "HTTP/1.1 200 OK\r\n"
-    f"Content-Length: {payloadLength}\r\n"
-    "meowHeader: MeowHacker is a bad cat !!"
+    "meowHeader: MeowHacker is a bad cat !!\r\n"
     "\r\n"
     )
 
     serverResponse = httpHeader + httpPayload
-
+   
     clientSocket.sendall(serverResponse.encode())
     clientSocket.close()
 
